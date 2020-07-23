@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 60vmin;
+    height: 70vh;
+}
+
+.header, .footer {
+    display: flex;
+    height: 30%;
+}
+
+.header h1 {
+    text-align: center;
+    margin: auto;
+}
+
+.footer p {
+    margin: auto;
+    text-align: center;
+}
+
+.footer a {
+    text-decoration: none;
+    color: black;
+}
+
+.error {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+    color: red;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    height: 40%;
+    width: 70%;
+    margin: auto;
+}
+
+
+.inputs {
+    border: transparent;
+    outline: transparent;
+    border-bottom: 2px solid rgb(80, 80, 80);
+    margin: 2vmin 0;
+    padding: 5%;
+}
+
+.button {
+    border: transparent;
+    outline: transparent;
+    color: white;
+    background: linear-gradient(90deg, rgba(100, 200, 255, 1) 0%, rgba(170, 50, 255, 1) 100%);
+    border-radius: 40px;
+    padding: 5%;
+}
+
+.button:active {
+    transform: scale(.95);
+    transition: .2s;
+}
+
+.button:before{
+}
+
+.button:hover {
+    cursor: pointer;
+}
+

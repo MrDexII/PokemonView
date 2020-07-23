@@ -1,0 +1,14 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    text-align: center;
+    align-items: center;
+    margin: 10% auto 0 auto;
+    width: 50vmin;
+}
+
+.deleteButton{
+    width: 40vmin;
+    margin: 1%;
+}

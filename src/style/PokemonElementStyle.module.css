@@ -1,0 +1,21 @@
+.pokemonElement {
+    margin: 1vmin;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+h1{
+    font-size: 2vmax;
+}
+
+h2 {
+    font-size: 1vmax;
+}
+
+img{
+    width: 120px;
+    height: 120px;
+}

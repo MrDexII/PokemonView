@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    margin-bottom: 10%;
+    width: 50vmin;
+    height: 90vmin;
+}
+
+.header, .footer {
+    display: flex;
+    height: 20%;
+}
+
+.header h1 {
+    text-align: center;
+    margin: auto;
+}
+
+.footer p {
+    margin: auto;
+    text-align: center;
+}
+
+.footer a {
+    text-decoration: none;
+    color: black;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    height: 60%;
+    margin: auto;
+}
