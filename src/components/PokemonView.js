@@ -64,6 +64,7 @@ function PokemonView({ isUserHaveAdminAuthority, token, changeView, logout }) {
             <PokemonContainer />
             <Navigation />
             {isUserHaveAdminAuthority() ? <button onClick={() => changeView("/pokemon/add")}>Add new Pokemon</button> : <button disabled>Add new Pokemon</button>}
+            {isUserHaveAdminAuthority() ?  <button onClick={()=> changeView("/admin")}>Admin Panel</button> : <button style={{display: "none"}}>Admin Panel</button>}
             <button onClick={logout}>LOGOUT</button>
         </div>
     )

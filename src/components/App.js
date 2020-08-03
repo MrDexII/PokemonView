@@ -9,6 +9,7 @@ import AddPokemon from "./AddPokemon"
 import Pokemon from "./Pokemon"
 import CreateUser from "./CreateUser"
 import NoAllow from "./NoAllow"
+import AdminPanel from "./AdminPanel"
 import "../style/index.css"
 
 function App() {
@@ -16,10 +17,10 @@ function App() {
     const defaultUserDetails = {
         username: "",
         password: "",
-        //token: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJpZCI6MSwicm9sZSI6IkFETUlOIiwiYXV0aG9yaXR5IjoiQURNSU4ifSx7ImlkIjoyLCJyb2xlIjoiVVNFUiIsImF1dGhvcml0eSI6IlVTRVIifV0sImlhdCI6MTU5MDc1OTU3MywiZXhwIjoxNTkxOTEyODAwfQ.ZBGvp4ryogkRgLJRk7PwYgQt_emWefaVaPzA8pZPl3Ghhx69ks3xjyezbVBLkRJqd1Lz-3LCBQ8yr99xfCT7kQ",
-        token: null,
+        token: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJpZCI6MSwicm9sZSI6IkFETUlOIiwiYXV0aG9yaXR5IjoiQURNSU4ifSx7ImlkIjoyLCJyb2xlIjoiVVNFUiIsImF1dGhvcml0eSI6IlVTRVIifV0sImlhdCI6MTU5NjQ0OTA0MSwiZXhwIjoxNTk3NjE1MjAwfQ.InHzihvRrwIp6AOXnH_UhvllxKLH0wAkMP2EktI4UESKD6RImIn0cct-fytAZvA4oRIijZg5P5tnsygN5a4yQg",
+        //token: null,
         status: 0,
-        authorities: []
+        authorities: ["ADMIN", "USER"]
     }
 
     const [values, setValues] = useForm(defaultUserDetails)
@@ -123,6 +124,12 @@ function App() {
             </Route>
             <Route path="/createUser" exact>
                 <CreateUser />
+            </Route>
+            <Route path="/admin" exact>
+                {isUserHaveAdminAuthority() ?
+                    <AdminPanel token={values.token} /> :
+                    <NoAllow />
+                }
             </Route>
         </Switch>
     )
