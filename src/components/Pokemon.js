@@ -62,7 +62,8 @@ function Pokemon({ isUserHaveAdminAuthority, token, changeView }) {
                 <AddPokemon token={token} isUserHaveAdminAuthority={isUserHaveAdminAuthority} initialValues={pokemonData} handleSubmit={updatePokemon} />
                 {isUserHaveAdminAuthority() ?
                     <button className={styles.deleteButton} onClick={deletePokemon}>Delete</button> :
-                    <button className={styles.deleteButton} disabled>Delete</button>}
+                    ""
+                }
             </div>
         )
     )

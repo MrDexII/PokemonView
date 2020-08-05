@@ -4,7 +4,7 @@ import { withRouter, Link } from "react-router-dom"
 import styles from "../style/PokemonContainerStyle.module.css"
 import PokemonElement from "./PokemonElement"
 
-function PokemonView({ isUserHaveAdminAuthority, token, changeView, logout }) {
+function PokemonView({ isUserHaveAdminAuthority, token, changeView, logout, username }) {
     const [state, setState] = useState({ content: "", new: false })
 
     async function fetchData(url) {
@@ -61,10 +61,11 @@ function PokemonView({ isUserHaveAdminAuthority, token, changeView, logout }) {
 
     return (
         <div className={styles.main}>
+            <h1>Current User: {username}</h1>
             <PokemonContainer />
             <Navigation />
-            {isUserHaveAdminAuthority() ? <button onClick={() => changeView("/pokemon/add")}>Add new Pokemon</button> : <button disabled>Add new Pokemon</button>}
-            {isUserHaveAdminAuthority() ?  <button onClick={()=> changeView("/admin")}>Admin Panel</button> : <button style={{display: "none"}}>Admin Panel</button>}
+            {isUserHaveAdminAuthority() ? <button onClick={() => changeView("/pokemon/add")}>Add new Pokemon</button> : ""}
+            {isUserHaveAdminAuthority() ? <button onClick={() => changeView("/admin")}>Admin Panel</button> : ""}
             <button onClick={logout}>LOGOUT</button>
         </div>
     )

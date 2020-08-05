@@ -6,7 +6,7 @@ import styles from "../style/AdminPanelStyle.module.css"
 import { useState } from "react"
 import { useEffect } from "react";
 
-function AdminPanel({ token, mapTypeToLabel }) {
+function AdminPanel({ token, username }) {
     const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([]);
 
@@ -54,29 +54,60 @@ function AdminPanel({ token, mapTypeToLabel }) {
 
     const handleSelectChange = (labelsList, event, id) => {
 
-        let roleTable = new Array();
+        let roleTable = [];
 
-        labelsList.forEach(label => {
-            roleTable.push(roles.find(role => role.role === label.label))
-        });
+        if (labelsList || labelsList !== null) {
+            labelsList.forEach(label => {
+                roleTable.push(roles.find(role => role.role === label.label))
+            });
+        }
 
-        const usersCopy = findUser(id, "authorities", roleTable )
+        const usersCopy = findUser(id, "authorities", roleTable)
 
         setUsers(usersCopy)
     }
 
     const findUser = (id, name, value) => {
-        const foundUser = users.filter(user => user.id == id)
-        const index = users.indexOf(foundUser[0])
+        const index = findUserIndex(id)
         let usersCopy = Array.from(users);
         usersCopy[index] = { ...usersCopy[index], [name]: value }
-
         return usersCopy
+    }
+    const findUserIndex = (id) => {
+        const foundUser = users.find(user => user.id == id)
+        const index = users.indexOf(foundUser)
+        return index
+    }
+
+
+    const handleUpdateUser = async (id) => {
+        const url = `http://localhost:8080/user/${id}`
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                'Authorization': token,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(users[findUserIndex(id)])
+        })
+        console.log(response.status)
+    }
+
+    const handleDeleteUser = async (id) => {
+        const url = `http://localhost:8080/user/${id}`
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                'Authorization': token,
+            },
+        })
+        console.log(response.status)
     }
 
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Admin Panel</h1>
+            <h1>Current User: {username}</h1>
             <table className={styles.table}>
                 <thead>
                     <tr>
@@ -87,6 +118,8 @@ function AdminPanel({ token, mapTypeToLabel }) {
                         <th>Credentials non expired</th>
                         <th>Enabled</th>
                         <th>Authorities</th>
+                        <th>Update</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,11 +127,55 @@ function AdminPanel({ token, mapTypeToLabel }) {
                         return <tr key={user.id}>
                             <td>{user.id}</td>
                             <td>{user.username}</td>
-                            <td><input className={user.id} key={user.id + "accountNonExpired"} name="accountNonExpired" type="checkbox" checked={user.accountNonExpired} onChange={handleChange} /></td>
-                            <td><input className={user.id} key={user.id + "accountNonLocked"} name="accountNonLocked" type="checkbox" checked={user.accountNonLocked} onChange={handleChange} /></td>
-                            <td><input className={user.id} key={user.id + "credentialsNonExpired"} name="credentialsNonExpired" type="checkbox" checked={user.credentialsNonExpired} onChange={handleChange} /></td>
-                            <td><input className={user.id} key={user.id + "enabled"} name="enabled" type="checkbox" checked={user.enabled} onChange={handleChange} /></td>
-                            <td> <Select key={user.id + "select"} isMulti={true} value={user.authorities.map(mapRoleLabels)} onChange={(event, event2) => handleSelectChange(event, event2, user.id)} options={roles.map(mapRoleLabels)} /></td>
+                            <td>
+                                <input className={user.id}
+                                    key={user.id + "accountNonExpired"}
+                                    name="accountNonExpired"
+                                    type="checkbox"
+                                    checked={user.accountNonExpired}
+                                    onChange={handleChange} />
+                            </td>
+                            <td>
+                                <input
+                                    className={user.id}
+                                    key={user.id + "accountNonLocked"}
+                                    name="accountNonLocked"
+                                    type="checkbox"
+                                    checked={user.accountNonLocked}
+                                    onChange={handleChange} />
+                            </td>
+                            <td>
+                                <input
+                                    className={user.id}
+                                    key={user.id + "credentialsNonExpired"}
+                                    name="credentialsNonExpired"
+                                    type="checkbox"
+                                    checked={user.credentialsNonExpired}
+                                    onChange={handleChange} />
+                            </td>
+                            <td>
+                                <input
+                                    className={user.id}
+                                    key={user.id + "enabled"}
+                                    name="enabled"
+                                    type="checkbox"
+                                    checked={user.enabled}
+                                    onChange={handleChange} />
+                            </td>
+                            <td>
+                                <Select
+                                    key={user.id + "select"}
+                                    isMulti={true}
+                                    value={user.authorities.map(mapRoleLabels)}
+                                    onChange={(event, event2) => handleSelectChange(event, event2, user.id)}
+                                    options={roles.map(mapRoleLabels)} />
+                            </td>
+                            <td>
+                                <button onClick={(event) => handleUpdateUser(user.id)}>Update</button>
+                            </td>
+                            <td>
+                                <button onClick={(event) => handleDeleteUser(user.id)}>Delete</button>
+                            </td>
                         </tr>
                     })}
                 </tbody>

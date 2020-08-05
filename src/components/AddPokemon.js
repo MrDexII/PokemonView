@@ -74,8 +74,8 @@ function AddPokemon({ token, isUserHaveAdminAuthority, handleSubmit, initialValu
                 <input name="pokemonName" value={values.pokemonName} type="text" onChange={setValues} placeholder="Pokemon Name" autoComplete="off" />
                 <input name="imageUrl" value={values.imageUrl} type="text" onChange={setValues} placeholder="Image URL" autoComplete="off" />
                 {isUserHaveAdminAuthority() ?
-                    <input type="submit" value={initialValues ? "Update Pokemon" : "Add Pokemon"} /> :
-                    <input disabled type="submit" value={initialValues ? "Update Pokemon" : "Add Pokemon"} />
+                    <button>{initialValues ? "Update Pokemon" : "Add Pokemon"}</button> :
+                    ""
                 }
             </form>
         </div>
