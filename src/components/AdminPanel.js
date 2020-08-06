@@ -9,6 +9,7 @@ import { useEffect } from "react";
 function AdminPanel({ token, username }) {
     const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([]);
+    const [search, setSearch] = useState([]);
 
     useEffect(() => {
         getAllUsers()
@@ -104,10 +105,26 @@ function AdminPanel({ token, username }) {
         console.log(response.status)
     }
 
+    const handleSearchChange = ({ target }) => {
+        const { value } = target
+        setSearch(value)
+    }
+
+    const handleSearchClick = () => {
+        const regex = `[a-z]*(${search})[a-z]*`
+        const filteredUsers = users.filter((user) => { return user.username.search(regex) !== -1 })
+        setUsers(filteredUsers)
+    }
+
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Admin Panel</h1>
             <h1>Current User: {username}</h1>
+            <div className={styles.searchContainer}>
+                <label htmlFor="searchUser">Search User: </label>
+                <input id="searchUser" type="text" name="searchUser" value={search} onChange={handleSearchChange} />
+                <button className={styles.searchButton} onClick={handleSearchClick}>Search</button>
+            </div>
             <table className={styles.table}>
                 <thead>
                     <tr>
