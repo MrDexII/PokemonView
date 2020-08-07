@@ -17,9 +17,9 @@ function App() {
     const defaultUserDetails = {
         username: "",
         password: "",
+        //token: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJpZCI6MSwicm9sZSI6IkFETUlOIiwiYXV0aG9yaXR5IjoiQURNSU4ifSx7ImlkIjoyLCJyb2xlIjoiVVNFUiIsImF1dGhvcml0eSI6IlVTRVIifV0sImlhdCI6MTU5NjcxMzA3OSwiZXhwIjoxNTk3ODc0NDAwfQ.CgWiw2xewrLYrwOYmePQaKEZMb_2iH1RdbY_DW-cvxTNocke8cxqTaZr_OJF28lMpYRA3HiFXB4d-tBl16Yw6Q",
         token: null,
-        status: 0,
-        authorities: ["ADMIN", "USER"]
+        status: 0
     }
 
     const [values, setValues] = useForm(defaultUserDetails)
@@ -44,9 +44,7 @@ function App() {
                     ...values,
                     token: response.headers.get("Authorization"),
                     status: response.status,
-                    authorities: extractAuthorities(response.headers.get("Authorization"))
                 })
-                extractAuthorities(response.headers.get("Authorization"))
                 changeView("/pokemon")
             } else {
                 setValues({
@@ -99,8 +97,9 @@ function App() {
     const changeView = path => history.push(path)
 
     const isUserHaveAdminAuthority = () => {
-        if (values.authorities)
-            return values.authorities.indexOf("ADMIN") > -1
+        const authorities =  extractAuthorities(values.token)
+        if (authorities)
+            return authorities.indexOf("ADMIN") > -1
         return false
     }
 

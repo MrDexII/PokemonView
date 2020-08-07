@@ -3,6 +3,7 @@ import { useForm } from "./useForm"
 import Select from "react-select"
 
 import styles from "../style/AddPokemonView.module.css"
+import styleButton from "../style/PokemonStyle.module.css"
 
 function AddPokemon({ token, isUserHaveAdminAuthority, handleSubmit, initialValues }) {
 
@@ -74,7 +75,7 @@ function AddPokemon({ token, isUserHaveAdminAuthority, handleSubmit, initialValu
                 <input name="pokemonName" value={values.pokemonName} type="text" onChange={setValues} placeholder="Pokemon Name" autoComplete="off" />
                 <input name="imageUrl" value={values.imageUrl} type="text" onChange={setValues} placeholder="Image URL" autoComplete="off" />
                 {isUserHaveAdminAuthority() ?
-                    <button>{initialValues ? "Update Pokemon" : "Add Pokemon"}</button> :
+                    <button className={styleButton.deleteButton}>{initialValues ? "Update Pokemon" : "Add Pokemon"}</button> :
                     ""
                 }
             </form>
