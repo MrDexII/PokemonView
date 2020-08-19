@@ -75,7 +75,7 @@ function AdminPanel({ token, username }) {
         return usersCopy
     }
     const findUserIndex = (id) => {
-        const foundUser = users.find(user => user.id == id)
+        const foundUser = users.find(user => user.user_id == id)
         const index = users.indexOf(foundUser)
         return index
     }
@@ -141,12 +141,12 @@ function AdminPanel({ token, username }) {
                 </thead>
                 <tbody>
                     {users.map((user) => {
-                        return <tr key={user.id}>
-                            <td>{user.id}</td>
+                        return <tr key={user.user_id}>
+                            <td>{user.user_id}</td>
                             <td>{user.username}</td>
                             <td>
-                                <input className={user.id}
-                                    key={user.id + "accountNonExpired"}
+                                <input className={user.user_id}
+                                    key={user.user_id + "accountNonExpired"}
                                     name="accountNonExpired"
                                     type="checkbox"
                                     checked={user.accountNonExpired}
@@ -154,8 +154,8 @@ function AdminPanel({ token, username }) {
                             </td>
                             <td>
                                 <input
-                                    className={user.id}
-                                    key={user.id + "accountNonLocked"}
+                                    className={user.user_id}
+                                    key={user.user_id + "accountNonLocked"}
                                     name="accountNonLocked"
                                     type="checkbox"
                                     checked={user.accountNonLocked}
@@ -163,8 +163,8 @@ function AdminPanel({ token, username }) {
                             </td>
                             <td>
                                 <input
-                                    className={user.id}
-                                    key={user.id + "credentialsNonExpired"}
+                                    className={user.user_id}
+                                    key={user.user_id + "credentialsNonExpired"}
                                     name="credentialsNonExpired"
                                     type="checkbox"
                                     checked={user.credentialsNonExpired}
@@ -172,8 +172,8 @@ function AdminPanel({ token, username }) {
                             </td>
                             <td>
                                 <input
-                                    className={user.id}
-                                    key={user.id + "enabled"}
+                                    className={user.user_id}
+                                    key={user.user_id + "enabled"}
                                     name="enabled"
                                     type="checkbox"
                                     checked={user.enabled}
@@ -181,17 +181,17 @@ function AdminPanel({ token, username }) {
                             </td>
                             <td>
                                 <Select
-                                    key={user.id + "select"}
+                                    key={user.user_id + "select"}
                                     isMulti={true}
                                     value={user.authorities.map(mapRoleLabels)}
-                                    onChange={(event, event2) => handleSelectChange(event, event2, user.id)}
+                                    onChange={(event, event2) => handleSelectChange(event, event2, user.user_id)}
                                     options={roles.map(mapRoleLabels)} />
                             </td>
                             <td>
-                                <button onClick={(event) => handleUpdateUser(user.id)}>Update</button>
+                                <button onClick={(event) => handleUpdateUser(user.user_id)}>Update</button>
                             </td>
                             <td>
-                                <button onClick={(event) => handleDeleteUser(user.id)}>Delete</button>
+                                <button onClick={(event) => handleDeleteUser(user.user_id)}>Delete</button>
                             </td>
                         </tr>
                     })}

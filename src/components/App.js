@@ -64,6 +64,9 @@ function App() {
     }
 
     const extractAuthorities = token => {
+        if (!token || token == null) {
+            return []
+        }
         token = token.replace('Bearer ', '')
         const jwt = require('jsonwebtoken');
         const decoded = jwt.decode(token);
@@ -97,12 +100,11 @@ function App() {
     const changeView = path => history.push(path)
 
     const isUserHaveAdminAuthority = () => {
-        const authorities =  extractAuthorities(values.token)
+        const authorities = extractAuthorities(values.token)
         if (authorities)
             return authorities.indexOf("ADMIN") > -1
         return false
     }
-
     return (
         <Switch>
             <Route path="/" exact>

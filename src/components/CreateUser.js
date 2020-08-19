@@ -49,8 +49,8 @@ function CreateUser() {
     const handleOnSubmit = (event) => {
         event.preventDefault()
         if (isEmailValid && isPasswordValid && values.email !== "" && values.password !== "") {
-            async function addUser(url) {
-                await fetch(url, {
+            const addUser = async (url) => {
+                const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -59,15 +59,12 @@ function CreateUser() {
                         username: values.email,
                         password: values.password
                     })
-                }).then(response => {
-                    if (response.status !== 200) {
-                        setIsUserCreatedSuccessfully(false)
-                        return response.text()
-                    }
-                    else
-                        return ""
                 })
-                    .then(data => setResponseMassage(data))
+
+                if (response.status !== 200) {
+                    setIsUserCreatedSuccessfully(false)
+                    setResponseMassage(response.text())
+                }
             }
             const url = "http://localhost:8080/user/new"
             addUser(url)
