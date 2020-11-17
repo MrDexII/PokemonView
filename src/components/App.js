@@ -17,7 +17,6 @@ function App() {
     const defaultUserDetails = {
         username: "",
         password: "",
-        //token: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJpZCI6MSwicm9sZSI6IkFETUlOIiwiYXV0aG9yaXR5IjoiQURNSU4ifSx7ImlkIjoyLCJyb2xlIjoiVVNFUiIsImF1dGhvcml0eSI6IlVTRVIifV0sImlhdCI6MTU5NjcxMzA3OSwiZXhwIjoxNTk3ODc0NDAwfQ.CgWiw2xewrLYrwOYmePQaKEZMb_2iH1RdbY_DW-cvxTNocke8cxqTaZr_OJF28lMpYRA3HiFXB4d-tBl16Yw6Q",
         token: null,
         status: 0
     }

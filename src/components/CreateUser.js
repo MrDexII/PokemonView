@@ -61,15 +61,17 @@ function CreateUser() {
                     })
                 })
 
-                if (response.status !== 200) {
+                if (response.status !== 201) {
+                    const text = await response.text();
+                    setResponseMassage(text)
                     setIsUserCreatedSuccessfully(false)
-                    setResponseMassage(response.text())
+                } else {
+                    setIsUserCreatedSuccessfully(true)
                 }
             }
             const url = "http://localhost:8080/user/new"
             addUser(url)
             setValues(defaultFormValues)
-            setIsUserCreatedSuccessfully(true)
         }
     }
 
