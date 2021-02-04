@@ -69,7 +69,7 @@ function CreateUser() {
                     setIsUserCreatedSuccessfully(true)
                 }
             }
-            const url = "http://localhost:8080/user/new"
+            const url = "http://localhost:8080/user/"
             addUser(url)
             setValues(defaultFormValues)
         }

@@ -19,7 +19,7 @@ function PokemonView({ isUserHaveAdminAuthority, token, changeView, logout, user
     }
 
     useEffect(() => {
-        const url = "http://localhost:8080/pokemon/all"
+        const url = "http://localhost:8080/pokemon/"
         fetchData(url)
     }, [])
 
