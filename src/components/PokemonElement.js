@@ -1,20 +1,20 @@
-import React from "react"
-import styles from "../style/PokemonElementStyle.module.css"
+import React from "react";
+import styles from "../style/PokemonElementStyle.module.css";
 
-function PokemonElement({ pokemonName, imageUrl, pokemonType }) {
-    return (
-        <div className={styles.pokemonElement}>
-            <h1>{pokemonName}</h1>
-            <img src={imageUrl} alt="" />
-            {pokemonType.map(type => {
-                return (
-                    <div className={styles.type} key={type.id}>
-                        <h2>{type.name}</h2>
-                    </div>
-                )
-            })}
-        </div>
-    )
+function PokemonElement({ name, fotoUrl, types }) {
+  return (
+    <div className={styles.pokemonElement}>
+      <h1>{name}</h1>
+      <img src={fotoUrl} alt="" />
+      {types.map((type) => {
+        return (
+          <div className={styles.type} key={name + type}>
+            <h2>{type}</h2>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
-export default PokemonElement
+export default PokemonElement;
