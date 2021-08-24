@@ -23,13 +23,13 @@ function App() {
   };
 
   const [values, setValues] = useForm(defaultUserDetails);
-  const [isLoading, setIsLoading] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   let history = useHistory();
 
-  useEffect(() => {
-    setIsLoading(false);
-  }, [setIsLoading]);
+  // useEffect(() => {
+  //   setIsLoading(false);
+  // }, [setIsLoading]);
 
   const loginSubmit = (event) => {
     event.preventDefault();
@@ -60,7 +60,7 @@ function App() {
       setIsLoading(false);
     }
 
-    const url = "http://localhost:8080/login";
+    const url = "http://192.168.1.4:8080/login";
 
     setIsLoading(true);
     fetchUser(url);
@@ -90,7 +90,7 @@ function App() {
       }).catch((error) => console.error(error));
     }
 
-    const url = "http://localhost:8080/pokemon/";
+    const url = "http://192.168.1.4:8080/pokemon/";
     addPokemon(url);
     changeView("/pokemon");
   };

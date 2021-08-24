@@ -38,7 +38,7 @@ function AddPokemon({
   }, [pokemonStats]);
 
   useEffect(() => {
-    const url = "http://localhost:8080/pokemon/type/";
+    const url = "http://192.168.1.4:8080/pokemon/type/";
     fetchPokemonType(url);
     if (initialValues) {
       const newPokemon = {
@@ -155,132 +155,134 @@ function AddPokemon({
           autoComplete="off"
         />
         <label>Pokemon stats</label>
-        <label>Base hp</label>
-        <input
-          name="hp.base"
-          value={pokemonStats.hp.base}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Min hp</label>
-        <input
-          name="hp.min"
-          value={pokemonStats.hp.min}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Max hp</label>
-        <input
-          name="hp.max"
-          value={pokemonStats.hp.max}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Base attack</label>
-        <input
-          name="attack.base"
-          value={pokemonStats.attack.base}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Min attack</label>
-        <input
-          name="attack.min"
-          value={pokemonStats.attack.min}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Max attack</label>
-        <input
-          name="attack.max"
-          value={pokemonStats.attack.max}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Base defence</label>
-        <input
-          name="defence.base"
-          value={pokemonStats.defence.base}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Min defence</label>
-        <input
-          name="defence.min"
-          value={pokemonStats.defence.min}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Max defence</label>
-        <input
-          name="defence.max"
-          value={pokemonStats.defence.max}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Base specialAttack</label>
-        <input
-          name="specialAttack.base"
-          value={pokemonStats.specialAttack.base}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Min specialAttack</label>
-        <input
-          name="specialAttack.min"
-          value={pokemonStats.specialAttack.min}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Max specialAttack</label>
-        <input
-          name="specialAttack.max"
-          value={pokemonStats.specialAttack.max}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Base specialDefence</label>
-        <input
-          name="specialDefence.base"
-          value={pokemonStats.specialDefence.base}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Min specialDefence</label>
-        <input
-          name="specialDefence.min"
-          value={pokemonStats.specialDefence.min}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Max specialDefence</label>
-        <input
-          name="specialDefence.max"
-          value={pokemonStats.specialDefence.max}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Base speed</label>
-        <input
-          name="speed.base"
-          value={pokemonStats.speed.base}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Min speed</label>
-        <input
-          name="speed.min"
-          value={pokemonStats.speed.min}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
-        <label>Max speed</label>
-        <input
-          name="speed.max"
-          value={pokemonStats.speed.max}
-          type="number"
-          onChange={onPokemonStatsChange}
-        />
+        <div className={styles.gridContainer}>
+          <label>Base hp</label>
+          <input
+            name="hp.base"
+            value={pokemonStats.hp.base}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Min hp</label>
+          <input
+            name="hp.min"
+            value={pokemonStats.hp.min}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Max hp</label>
+          <input
+            name="hp.max"
+            value={pokemonStats.hp.max}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Base attack</label>
+          <input
+            name="attack.base"
+            value={pokemonStats.attack.base}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Min attack</label>
+          <input
+            name="attack.min"
+            value={pokemonStats.attack.min}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Max attack</label>
+          <input
+            name="attack.max"
+            value={pokemonStats.attack.max}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Base defence</label>
+          <input
+            name="defence.base"
+            value={pokemonStats.defence.base}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Min defence</label>
+          <input
+            name="defence.min"
+            value={pokemonStats.defence.min}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Max defence</label>
+          <input
+            name="defence.max"
+            value={pokemonStats.defence.max}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Base specialAttack</label>
+          <input
+            name="specialAttack.base"
+            value={pokemonStats.specialAttack.base}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Min specialAttack</label>
+          <input
+            name="specialAttack.min"
+            value={pokemonStats.specialAttack.min}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Max specialAttack</label>
+          <input
+            name="specialAttack.max"
+            value={pokemonStats.specialAttack.max}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Base specialDefence</label>
+          <input
+            name="specialDefence.base"
+            value={pokemonStats.specialDefence.base}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Min specialDefence</label>
+          <input
+            name="specialDefence.min"
+            value={pokemonStats.specialDefence.min}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Max specialDefence</label>
+          <input
+            name="specialDefence.max"
+            value={pokemonStats.specialDefence.max}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Base speed</label>
+          <input
+            name="speed.base"
+            value={pokemonStats.speed.base}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Min speed</label>
+          <input
+            name="speed.min"
+            value={pokemonStats.speed.min}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+          <label>Max speed</label>
+          <input
+            name="speed.max"
+            value={pokemonStats.speed.max}
+            type="number"
+            onChange={onPokemonStatsChange}
+          />
+        </div>
         {isUserHaveAdminAuthority() ? (
           <button className={styleButton.deleteButton}>
             {initialValues ? "Update Pokemon" : "Add Pokemon"}

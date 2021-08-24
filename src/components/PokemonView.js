@@ -26,7 +26,7 @@ function PokemonView({
   }
 
   useEffect(() => {
-    const url = "http://localhost:8080/pokemon/";
+    const url = "http://192.168.1.4:8080/pokemon/";
     fetchData(url);
   }, []);
 
