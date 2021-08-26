@@ -1,22 +1,115 @@
-.container {
-    margin: auto;
-    width: 50%;
-    height: 50%;
+/* .container {
+  margin: auto;
+  width: 100%;
+  height: 100%;
+} */
+
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-items: center;
+}
+
+.gridContainer label {
+  font-weight: 500;
+  font-size: 0.6rem;
 }
 
 .addForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 auto 0 auto;
-    background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto 0 auto;
+  background-color: white;
 }
 
-.selectBox, .addForm input {
-    width: 40vmin;
-    margin: 2%;
+.selectBox,
+.addForm input {
+  width: 90%;
+  margin: 2%;
+}
+
+label {
+  font-weight: bold;
 }
 
 .addForm input[type="text"] {
-    padding: 2%;
+  padding: 2%;
+}
+
+.addForm input[type="number"] {
+  width: 50%;
+  margin: 1%;
+  padding: 1%;
+  text-align: center;
+}
+
+/* Disabling arrows with input numbers */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (min-width: 321px) and (orientation: landscape) {
+  .gridContainer {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, 1ft);
+  }
+
+  .gridContainer label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width: 320px) {
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape) {
+  .gridContainer {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, 1ft);
+  }
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
+  /* Styles */
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width: 1224px) {
+  #root {
+    height: 100vh;
+    width: 100vw;
+  }
+}
+
+/* Large screens ----------- */
+@media only screen and (min-width: 1824px) {
+  /* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+  only screen and (min-device-pixel-ratio: 1.5) {
+  /* Styles */
 }
