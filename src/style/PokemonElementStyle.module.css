@@ -1,21 +1,47 @@
 .pokemonElement {
-    margin: 1vmin;
+  margin: 1vmin;
 }
 
-a{
-    text-decoration: none;
-    color: black;
+a {
+  text-decoration: none;
+  color: black;
 }
 
-h1{
-    font-size: 2vmax;
+h1 {
+  font-size: 1.5rem;
 }
 
 h2 {
-    font-size: 1vmax;
+  font-size: 1rem;
 }
 
-img{
-    width: 120px;
-    height: 120px;
+img {
+  width: 120px;
+  height: 120px;
+}
+
+.skeleton {
+  opacity: 0.7;
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+.skeletonText {
+  width: 50%;
+  height: 0.5rem;
+  align-self: center;
+  margin: auto;
+}
+
+.type {
+  height: 1rem;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
 }

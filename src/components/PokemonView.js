@@ -11,18 +11,23 @@ function PokemonView({
   logout,
   username,
 }) {
-  const [state, setState] = useState({ content: "", new: false });
+  const [state, setState] = useState({ content: null, isLoading: true });
 
   async function fetchData(url) {
-    await fetch(url, {
+    setState((prev) => {
+      return {
+        ...prev,
+        isLoading: true,
+      };
+    });
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         Authorization: token,
       },
-    })
-      .then((data) => data.json())
-      .then((data) => setState({ content: data }))
-      .catch((error) => console.log(error));
+    });
+    const json = await response.json();
+    setState({ content: json, isLoading: false });
   }
 
   useEffect(() => {
@@ -30,17 +35,26 @@ function PokemonView({
     fetchData(url);
   }, []);
 
+  const populateDummyElements = () => {
+    const elements = [];
+    for (let i = 0; i < 20; i++) {
+      elements.push(<PokemonElement key={i} />);
+    }
+    return elements;
+  };
+
   const PokemonContainer = () => {
     return (
       <div className={styles.pokemonContainer}>
-        {state.content.length !== 0 &&
-          state.content._embedded.pokemonList.map((pokemon) => {
-            return (
-              <Link key={pokemon.number} to={"/pokemon/" + pokemon._id}>
-                <PokemonElement {...pokemon} />
-              </Link>
-            );
-          })}
+        {state.isLoading !== true
+          ? state.content._embedded.pokemonList.map((pokemon) => {
+              return (
+                <Link key={pokemon.number} to={"/pokemon/" + pokemon._id}>
+                  <PokemonElement {...pokemon} />
+                </Link>
+              );
+            })
+          : populateDummyElements()}
       </div>
     );
   };
@@ -55,7 +69,7 @@ function PokemonView({
   };
 
   const Navigation = () => {
-    return state.content !== "" ? (
+    return state.isLoading !== true ? (
       <div className={styles.navigation}>
         {state.content._links.prev ? (
           <button onClick={prevPage}>Previous</button>
