@@ -10,6 +10,8 @@ import Pokemon from "./Pokemon";
 import CreateUser from "./CreateUser";
 import NoAllow from "./NoAllow";
 import AdminPanel from "./AdminPanel";
+import BattleView from "./BattleView";
+
 import "../style/index.css";
 
 function App() {
@@ -154,6 +156,9 @@ function App() {
         ) : (
           <NoAllow />
         )}
+      </Route>
+      <Route path="/battle" exact>
+        <BattleView username={values.username} />
       </Route>
     </Switch>
   );

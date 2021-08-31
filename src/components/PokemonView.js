@@ -94,7 +94,10 @@ function PokemonView({
     <div className={styles.main}>
       <div className={styles.nav}>
         <h1 className={styles.navElement}>Current User: {username}</h1>
-        <button className={styles.navElement}>
+        <button
+          className={styles.navElement}
+          onClick={() => changeView("/battle")}
+        >
           Pokemon Battle
         </button>
         {isUserHaveAdminAuthority() ? (
