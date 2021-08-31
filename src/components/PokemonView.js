@@ -92,20 +92,35 @@ function PokemonView({
 
   return (
     <div className={styles.main}>
-      <h1>Current User: {username}</h1>
+      <div className={styles.nav}>
+        <h1 className={styles.navElement}>Current User: {username}</h1>
+        <button className={styles.navElement}>
+          Pokemon Battle
+        </button>
+        {isUserHaveAdminAuthority() ? (
+          <>
+            <button
+              className={styles.navElement}
+              onClick={() => changeView("/pokemon/add")}
+            >
+              Add new Pokemon
+            </button>
+            <button
+              className={styles.navElement}
+              onClick={() => changeView("/admin")}
+            >
+              Admin Panel
+            </button>
+          </>
+        ) : (
+          ""
+        )}
+        <button className={styles.navElement} onClick={logout}>
+          LOGOUT
+        </button>
+      </div>
       <PokemonContainer />
       <Navigation />
-      {isUserHaveAdminAuthority() ? (
-        <>
-          <button onClick={() => changeView("/pokemon/add")}>
-            Add new Pokemon
-          </button>
-          <button onClick={() => changeView("/admin")}>Admin Panel</button>
-        </>
-      ) : (
-        ""
-      )}
-      <button onClick={logout}>LOGOUT</button>
     </div>
   );
 }
