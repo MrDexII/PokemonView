@@ -1,39 +1,62 @@
 import React, { useState } from "react";
 import styles from "../style/BattleViewStyle.module.css";
 import * as SockJS from "sockjs-client";
-import Stomp from "stompjs";
+import { Client } from "@stomp/stompjs";
 
 export default function BattleView({ username }) {
   const [connected, setConnected] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(false);
   const [stompClient, setStompClient] = useState();
 
-  const handleConnect = () => {
-    const connectionSuccess = () => {
-      client.subscribe("/topic/andrewChat", onMessageReceived);
-      client.send(
-        "/app/chat.newUser",
-        {},
-        JSON.stringify({
-          sender: username,
-          type: "newUser",
-        })
-      );
-      setConnected(true);
-    };
-    const onMessageReceived = (payload) => {
-      console.log("dostalem", payload.body);
+  const setConnection = () => {
+    const client = new Client({});
+
+    client.webSocketFactory = () => {
+      return new SockJS("http://192.168.1.4:8080/webSocketApp");
     };
 
-    const sock = new SockJS("http://192.168.1.4:8080/webSocketApp");
-    const client = new 
-    Stomp.over(sock);
+    client.onConnect = function (frame) {
+      client.subscribe("/topic/andrewChat", onMessageReceived);
+      client.publish({
+        destination: "/app/chat.newUser",
+        headers: {},
+        body: JSON.stringify({
+          sender: username,
+          type: "newUser",
+        }),
+      });
+      setConnected(true);
+      setButtonDisabled(false);
+    };
+
+    client.onStompError = function (frame) {
+      console.log("Broker reported error: " + frame.headers["message"]);
+      console.log("Additional details: " + frame.body);
+    };
+
+    client.onDisconnect = function (frame) {
+      setConnected(false);
+    };
+
+    client.activate();
     setStompClient(client);
-    client.connect({}, connectionSuccess);
+  };
+
+  const handleConnect = () => {
+    setButtonDisabled(true);
+    if (!stompClient) {
+      setConnection();
+    } else {
+      stompClient.activate();
+    }
   };
 
   const handleDisconnect = () => {
-    stompClient.disconnect();
-    setConnected(false);
+    stompClient.deactivate();
+  };
+
+  const onMessageReceived = (payload) => {
+    console.log("dostalem", payload.body);
   };
 
   return (
@@ -42,7 +65,9 @@ export default function BattleView({ username }) {
       {connected ? (
         <button onClick={handleDisconnect}>Disconnect</button>
       ) : (
-        <button onClick={handleConnect}>Connect</button>
+        <button onClick={handleConnect} disabled={buttonDisabled}>
+          Connect
+        </button>
       )}
     </div>
   );
