@@ -3,20 +3,26 @@ import styles from "../style/BattleViewStyle.module.css";
 import * as SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
-export default function BattleView({ username }) {
+import OpponentsListView from "./OpponentsListView";
+
+import config from "../config";
+
+export default function BattleView({ username, token }) {
   const [connected, setConnected] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [stompClient, setStompClient] = useState();
+  const [jsonMessagePayload, setJsonMessagePayload] = useState({});
 
   const setConnection = () => {
     const client = new Client({});
 
     client.webSocketFactory = () => {
-      return new SockJS("http://192.168.1.4:8080/webSocketApp");
+      return new SockJS(`${config.SERVER_NAME }/webSocketApp?token=${token}`);
     };
 
     client.onConnect = function (frame) {
       client.subscribe("/topic/andrewChat", onMessageReceived);
+      client.subscribe("/topic/public", onMessageReceived);
       client.publish({
         destination: "/app/chat.newUser",
         headers: {},
@@ -34,7 +40,7 @@ export default function BattleView({ username }) {
       console.log("Additional details: " + frame.body);
     };
 
-    client.onDisconnect = function (frame) {
+    client.onWebSocketClose = function (frame) {
       setConnected(false);
     };
 
@@ -56,19 +62,33 @@ export default function BattleView({ username }) {
   };
 
   const onMessageReceived = (payload) => {
-    console.log("dostalem", payload.body);
+    const jsonContent = JSON.parse(payload.body);
+    setJsonMessagePayload(jsonContent);
   };
 
   return (
     <div>
-      <h1 className={styles.title}>Hello from battle</h1>
+      <header className={styles.header}>
+        <h1 className={styles.title}>Hello from battle</h1>
+      </header>
       {connected ? (
-        <button onClick={handleDisconnect}>Disconnect</button>
+        <>
+          <OpponentsListView username={username} message={jsonMessagePayload} />
+        </>
       ) : (
-        <button onClick={handleConnect} disabled={buttonDisabled}>
-          Connect
-        </button>
+        <></>
       )}
+      <footer className={styles.footer}>
+        <button
+          className={`${
+            connected ? styles.connectButton : styles.connectButton
+          }`}
+          onClick={connected ? handleDisconnect : handleConnect}
+          disabled={buttonDisabled}
+        >
+          {connected ? "Disconnect" : "Connect"}
+        </button>
+      </footer>
     </div>
   );
 }

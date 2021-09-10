@@ -4,6 +4,8 @@ import { withRouter, Link } from "react-router-dom";
 import styles from "../style/PokemonContainerStyle.module.css";
 import PokemonElement from "./PokemonElement";
 
+import config from "../config";
+
 function PokemonView({
   isUserHaveAdminAuthority,
   token,
@@ -31,7 +33,7 @@ function PokemonView({
   }
 
   useEffect(() => {
-    const url = "http://192.168.1.4:8080/pokemon/";
+    const url = `${config.SERVER_NAME}/pokemon/`;
     fetchData(url);
   }, []);
 

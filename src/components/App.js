@@ -12,6 +12,8 @@ import NoAllow from "./NoAllow";
 import AdminPanel from "./AdminPanel";
 import BattleView from "./BattleView";
 
+import config from "../config";
+
 import "../style/index.css";
 
 function App() {
@@ -62,7 +64,7 @@ function App() {
       setIsLoading(false);
     }
 
-    const url = "http://192.168.1.4:8080/login";
+    const url = `${config.SERVER_NAME}/login`;
 
     setIsLoading(true);
     fetchUser(url);
@@ -92,7 +94,7 @@ function App() {
       }).catch((error) => console.error(error));
     }
 
-    const url = "http://192.168.1.4:8080/pokemon/";
+    const url = `${config.SERVER_NAME}/pokemon/`;
     addPokemon(url);
     changeView("/pokemon");
   };
@@ -158,7 +160,7 @@ function App() {
         )}
       </Route>
       <Route path="/battle" exact>
-        <BattleView username={values.username} />
+        <BattleView token={values.token} username={values.username} />
       </Route>
     </Switch>
   );

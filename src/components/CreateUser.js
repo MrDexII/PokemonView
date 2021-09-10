@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import styles from "../style/LoginViewStyle.module.css";
 import userStyle from "../style/CreateUserStyle.module.css";
 
+import config from "../config";
+
 function CreateUser() {
   const defaultFormValues = {
     email: "",
@@ -79,7 +81,7 @@ function CreateUser() {
           setIsUserCreatedSuccessfully(true);
         }
       };
-      const url = "http://192.168.1.4:8080/user/";
+      const url = `${config.SERVER_NAME}/user/`;
       addUser(url);
       setValues(defaultFormValues);
     }
