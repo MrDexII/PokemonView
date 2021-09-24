@@ -20,9 +20,7 @@ function App() {
   const defaultUserDetails = {
     username: "",
     password: "",
-    //token: null,
-    token:
-      "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJyb2xlX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJhdXRob3JpdHkiOiJBRE1JTiJ9LHsicm9sZV9pZCI6Miwicm9sZSI6IlVTRVIiLCJhdXRob3JpdHkiOiJVU0VSIn1dLCJpYXQiOjE2Mjk3MTc4OTMsImV4cCI6MTYzMDg3OTIwMH0.Egts-pVdgM2qoVwkxNbRRJJ5zEEM1dlEkbmQ2QRvt2E6GeUHilSZ9iKShBFdU06hGHrEEOxyz2pcCxU1avQiSQ",
+    token: null,
     status: 0,
   };
 

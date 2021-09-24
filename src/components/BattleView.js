@@ -4,6 +4,7 @@ import * as SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
 import OpponentsListView from "./OpponentsListView";
+import Lobby from "./Lobby";
 
 import config from "../config";
 
@@ -12,17 +13,24 @@ export default function BattleView({ username, token }) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [stompClient, setStompClient] = useState();
   const [jsonMessagePayload, setJsonMessagePayload] = useState({});
+  const [alertWindow, setAlertWindow] = useState({
+    message: "",
+    opponentReady: false,
+    meReady: false,
+  });
+  const [isLobbyCreated, setIsLobbyCreated] = useState(false);
 
   const setConnection = () => {
     const client = new Client({});
 
     client.webSocketFactory = () => {
-      return new SockJS(`${config.SERVER_NAME }/webSocketApp?token=${token}`);
+      return new SockJS(`${config.SERVER_NAME}/webSocketApp?token=${token}`);
     };
 
     client.onConnect = function (frame) {
-      client.subscribe("/topic/andrewChat", onMessageReceived);
-      client.subscribe("/topic/public", onMessageReceived);
+      client.subscribe("/topic/gameChat", onMessageReceived);
+      client.subscribe("/users/topic/users", onMessageFromUser);
+      // client.subscribe("/topic/public", onMessageReceived);
       client.publish({
         destination: "/app/chat.newUser",
         headers: {},
@@ -66,6 +74,17 @@ export default function BattleView({ username, token }) {
     setJsonMessagePayload(jsonContent);
   };
 
+  const onMessageFromUser = (payload) => {
+    const jsonContent = JSON.parse(payload.body);
+    setAlertWindow((prev) => {
+      return { ...prev, message: jsonContent.content };
+    });
+  };
+
+  const handleCreateLobby = () => {
+    setIsLobbyCreated((prev) => !prev);
+  };
+
   return (
     <div>
       <header className={styles.header}>
@@ -73,7 +92,12 @@ export default function BattleView({ username, token }) {
       </header>
       {connected ? (
         <>
-          <OpponentsListView username={username} message={jsonMessagePayload} />
+          <OpponentsListView
+            username={username}
+            message={jsonMessagePayload}
+            stompClient={stompClient}
+          />
+          {isLobbyCreated ? <Lobby /> : <></>}
         </>
       ) : (
         <></>
@@ -88,6 +112,16 @@ export default function BattleView({ username, token }) {
         >
           {connected ? "Disconnect" : "Connect"}
         </button>
+        {connected ? (
+          <button
+            className={styles.createLobbyButton}
+            onClick={handleCreateLobby}
+          >
+            Create Lobby
+          </button>
+        ) : (
+          <></>
+        )}
       </footer>
     </div>
   );
