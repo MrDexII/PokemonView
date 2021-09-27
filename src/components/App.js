@@ -20,7 +20,7 @@ function App() {
   const defaultUserDetails = {
     username: "",
     password: "",
-    token: null,
+    token: localStorage.getItem("token"),
     status: 0,
   };
 
@@ -32,6 +32,12 @@ function App() {
   // useEffect(() => {
   //   setIsLoading(false);
   // }, [setIsLoading]);
+
+  useEffect(() => {
+    if (values.token) {
+      localStorage.setItem("token", String(values.token));
+    }
+  }, [values]);
 
   const loginSubmit = (event) => {
     event.preventDefault();
@@ -99,6 +105,7 @@ function App() {
 
   const logout = () => {
     setValues(defaultUserDetails);
+    localStorage.clear()
     changeView("/");
   };
   const changeView = (path) => history.push(path);
