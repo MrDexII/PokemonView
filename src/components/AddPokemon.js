@@ -34,7 +34,7 @@ function AddPokemon({
   useEffect(() => {
     setPokemon({
       ...pokemon,
-      ["pokemonStats"]: pokemonStats,
+      pokemonStats: pokemonStats,
     });
   }, [pokemonStats]);
 

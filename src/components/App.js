@@ -12,13 +12,17 @@ import NoAllow from "./NoAllow";
 import AdminPanel from "./AdminPanel";
 import BattleView from "./BattleView";
 
+import MyContext from "./MyContext";
 import config from "../config";
 
 import "../style/index.css";
 
-function App() {
+export default function App() {
   const defaultUserDetails = {
-    username: "",
+    username:
+      localStorage.getItem("userName") === null
+        ? ""
+        : localStorage.getItem("userName"),
     password: "",
     token: localStorage.getItem("token"),
     status: 0,
@@ -36,6 +40,7 @@ function App() {
   useEffect(() => {
     if (values.token) {
       localStorage.setItem("token", String(values.token));
+      localStorage.setItem("userName", String(values.username));
     }
   }, [values]);
 
@@ -104,8 +109,7 @@ function App() {
   };
 
   const logout = () => {
-    setValues(defaultUserDetails);
-    localStorage.clear()
+    localStorage.clear();
     changeView("/");
   };
   const changeView = (path) => history.push(path);
@@ -116,59 +120,63 @@ function App() {
     return false;
   };
   return (
-    <Switch>
-      <Route path="/" exact>
-        <LoginView
-          {...values}
-          isLoading={isLoading}
-          changeView={changeView}
-          handleChange={setValues}
-          handleSubmit={loginSubmit}
-        />
-      </Route>
-      <Route path="/pokemon" exact>
-        <PokemonView
-          username={values.username}
-          token={values.token}
-          isUserHaveAdminAuthority={isUserHaveAdminAuthority}
-          changeView={changeView}
-          logout={logout}
-        />
-      </Route>
-      <Route path="/pokemon/add" exact>
-        {isUserHaveAdminAuthority() ? (
-          <AddPokemon
-            authorities={values.authorities}
-            isUserHaveAdminAuthority={isUserHaveAdminAuthority}
-            handleSubmit={addPokemonSubmit}
-            token={values.token}
+    <MyContext.Provider
+      value={{
+        changeView: changeView,
+      }}
+    >
+      <Switch>
+        <Route path="/" exact>
+          <LoginView
+            {...values}
+            isLoading={isLoading}
+            changeView={changeView}
+            handleChange={setValues}
+            handleSubmit={loginSubmit}
           />
-        ) : (
-          <NoAllow />
-        )}
-      </Route>
-      <Route path="/pokemon/:id">
-        <Pokemon
-          token={values.token}
-          isUserHaveAdminAuthority={isUserHaveAdminAuthority}
-          changeView={changeView}
-        />
-      </Route>
-      <Route path="/createUser" exact>
-        <CreateUser />
-      </Route>
-      <Route path="/admin" exact>
-        {isUserHaveAdminAuthority() ? (
-          <AdminPanel username={values.username} token={values.token} />
-        ) : (
-          <NoAllow />
-        )}
-      </Route>
-      <Route path="/battle" exact>
-        <BattleView token={values.token} username={values.username} />
-      </Route>
-    </Switch>
+        </Route>
+        <Route path="/pokemon" exact>
+          <PokemonView
+            username={values.username}
+            token={values.token}
+            isUserHaveAdminAuthority={isUserHaveAdminAuthority}
+            changeView={changeView}
+            logout={logout}
+          />
+        </Route>
+        <Route path="/pokemon/add" exact>
+          {isUserHaveAdminAuthority() ? (
+            <AddPokemon
+              authorities={values.authorities}
+              isUserHaveAdminAuthority={isUserHaveAdminAuthority}
+              handleSubmit={addPokemonSubmit}
+              token={values.token}
+            />
+          ) : (
+            <NoAllow />
+          )}
+        </Route>
+        <Route path="/pokemon/:id">
+          <Pokemon
+            token={values.token}
+            isUserHaveAdminAuthority={isUserHaveAdminAuthority}
+            changeView={changeView}
+          />
+        </Route>
+        <Route path="/createUser" exact>
+          <CreateUser />
+        </Route>
+        <Route path="/admin" exact>
+          {isUserHaveAdminAuthority() ? (
+            <AdminPanel username={values.username} token={values.token} />
+          ) : (
+            <NoAllow />
+          )}
+        </Route>
+        <Route path="/battle" exact>
+          <BattleView token={values.token} username={values.username} />
+        </Route>
+      </Switch>
+    </MyContext.Provider>
   );
 }
-
-export default App;

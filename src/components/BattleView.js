@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../style/BattleViewStyle.module.css";
 import * as SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
 import OpponentsListView from "./OpponentsListView";
-import Lobby from "./Lobby";
+import Chat from "./Chat";
+import AlertWindow from "./AlertWindow";
 
 import config from "../config";
 
@@ -12,13 +13,14 @@ export default function BattleView({ username, token }) {
   const [connected, setConnected] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [stompClient, setStompClient] = useState();
-  const [jsonMessagePayload, setJsonMessagePayload] = useState({});
-  const [alertWindow, setAlertWindow] = useState({
-    message: "",
-    opponentReady: false,
-    meReady: false,
-  });
-  const [isLobbyCreated, setIsLobbyCreated] = useState(false);
+  const [chatMessagePayload, setChatMessagePayload] = useState([]);
+  const [userList, setUserList] = useState();
+  const [alertWindowMessage, setAlertWindowMessage] = useState();
+  const [isAlertWindowVisible, setIsAlertWindowVisible] = useState(false);
+
+  useEffect(() => {
+    setUserList(() => chatMessagePayload.at(-1)?.userSessionsList);
+  }, [chatMessagePayload]);
 
   const setConnection = () => {
     const client = new Client({});
@@ -28,15 +30,14 @@ export default function BattleView({ username, token }) {
     };
 
     client.onConnect = function (frame) {
-      client.subscribe("/topic/gameChat", onMessageReceived);
-      client.subscribe("/users/topic/users", onMessageFromUser);
-      // client.subscribe("/topic/public", onMessageReceived);
+      client.subscribe("/topic/gameChat", onMessageReceivedFromGameChat);
+      client.subscribe("/users/topic/users", onMessageReceivedFromUser);
       client.publish({
         destination: "/app/chat.newUser",
         headers: {},
         body: JSON.stringify({
           sender: username,
-          type: "newUser",
+          type: "NewUser",
         }),
       });
       setConnected(true);
@@ -67,22 +68,59 @@ export default function BattleView({ username, token }) {
 
   const handleDisconnect = () => {
     stompClient.deactivate();
+    setChatMessagePayload([]);
+    setAlertWindowMessage(undefined)
   };
 
-  const onMessageReceived = (payload) => {
+  const onMessageReceivedFromGameChat = (payload) => {
     const jsonContent = JSON.parse(payload.body);
-    setJsonMessagePayload(jsonContent);
+    setChatMessagePayload((prev) => [...prev, jsonContent]);
   };
 
-  const onMessageFromUser = (payload) => {
+  const onMessageReceivedFromUser = (payload) => {
     const jsonContent = JSON.parse(payload.body);
-    setAlertWindow((prev) => {
-      return { ...prev, message: jsonContent.content };
+    setAlertWindowMessage(jsonContent);
+    setIsAlertWindowVisible(true);
+  };
+
+  const sendMessageToUser = (destination, type, content) => {
+    stompClient.publish({
+      destination: destination,
+      headers: {},
+      body: JSON.stringify({
+        sender: username,
+        type: type,
+        content: content,
+        userSessionId: alertWindowMessage.userSessionId,
+      }),
     });
   };
 
-  const handleCreateLobby = () => {
-    setIsLobbyCreated((prev) => !prev);
+  const handleOk = (event) => {
+    event.preventDefault();
+    sendMessageToUser(
+      "/app/chat.sendRequestForPlayToUser",
+      "positiveBattleRequest",
+      `${username} accept request`
+    );
+  };
+
+  const handleNo = (event) => {
+    event.preventDefault();
+    sendMessageToUser(
+      "/app/chat.sendRequestForPlayToUser",
+      "negativeBattleRequest",
+      `${username} reject request`
+    );
+    setAlertWindowMessage(undefined);
+  };
+
+  const handleCancel = (event) => {
+    event.preventDefault();
+    setIsAlertWindowVisible(() => {
+      setAlertWindowMessage(undefined);
+      return false;
+    });
   };
 
   return (
@@ -94,13 +132,23 @@ export default function BattleView({ username, token }) {
         <>
           <OpponentsListView
             username={username}
-            message={jsonMessagePayload}
+            listOfUsers={userList}
             stompClient={stompClient}
           />
-          {isLobbyCreated ? <Lobby /> : <></>}
+          <Chat />
+          {alertWindowMessage && isAlertWindowVisible ? (
+            <AlertWindow
+              alertWindowMessage={alertWindowMessage}
+              handleOk={handleOk}
+              handleNo={handleNo}
+              handleCancel={handleCancel}
+            />
+          ) : (
+            ""
+          )}
         </>
       ) : (
-        <></>
+        ""
       )}
       <footer className={styles.footer}>
         <button
@@ -112,16 +160,6 @@ export default function BattleView({ username, token }) {
         >
           {connected ? "Disconnect" : "Connect"}
         </button>
-        {connected ? (
-          <button
-            className={styles.createLobbyButton}
-            onClick={handleCreateLobby}
-          >
-            Create Lobby
-          </button>
-        ) : (
-          <></>
-        )}
       </footer>
     </div>
   );
