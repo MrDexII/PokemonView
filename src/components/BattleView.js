@@ -19,7 +19,9 @@ export default function BattleView({ username, token }) {
   const [isAlertWindowVisible, setIsAlertWindowVisible] = useState(false);
 
   useEffect(() => {
-    setUserList(() => chatMessagePayload.at(-1)?.userSessionsList);
+    if (chatMessagePayload.at(-1)?.type !== "message") {
+      setUserList(() => chatMessagePayload.at(-1)?.userSessionsList);
+    }
   }, [chatMessagePayload]);
 
   const setConnection = () => {
@@ -69,7 +71,7 @@ export default function BattleView({ username, token }) {
   const handleDisconnect = () => {
     stompClient.deactivate();
     setChatMessagePayload([]);
-    setAlertWindowMessage(undefined)
+    setAlertWindowMessage(undefined);
   };
 
   const onMessageReceivedFromGameChat = (payload) => {
@@ -83,7 +85,7 @@ export default function BattleView({ username, token }) {
     setIsAlertWindowVisible(true);
   };
 
-  const sendMessageToUser = (destination, type, content) => {
+  const sendMessage = (destination, type, content) => {
     stompClient.publish({
       destination: destination,
       headers: {},
@@ -91,14 +93,14 @@ export default function BattleView({ username, token }) {
         sender: username,
         type: type,
         content: content,
-        userSessionId: alertWindowMessage.userSessionId,
+        userSessionId: alertWindowMessage?.userSessionId,
       }),
     });
   };
 
   const handleOk = (event) => {
     event.preventDefault();
-    sendMessageToUser(
+    sendMessage(
       "/app/chat.sendRequestForPlayToUser",
       "positiveBattleRequest",
       `${username} accept request`
@@ -107,7 +109,7 @@ export default function BattleView({ username, token }) {
 
   const handleNo = (event) => {
     event.preventDefault();
-    sendMessageToUser(
+    sendMessage(
       "/app/chat.sendRequestForPlayToUser",
       "negativeBattleRequest",
       `${username} reject request`
@@ -135,7 +137,10 @@ export default function BattleView({ username, token }) {
             listOfUsers={userList}
             stompClient={stompClient}
           />
-          <Chat />
+          <Chat
+            chatMessagePayload={chatMessagePayload}
+            sendMessage={sendMessage}
+          />
           {alertWindowMessage && isAlertWindowVisible ? (
             <AlertWindow
               alertWindowMessage={alertWindowMessage}
