@@ -90,6 +90,7 @@ export default function BattleView({ username, token }) {
       destination: destination,
       headers: {},
       body: JSON.stringify({
+        color: chatMessagePayload[0].color,
         sender: username,
         type: type,
         content: content,
@@ -130,7 +131,7 @@ export default function BattleView({ username, token }) {
       <header className={styles.header}>
         <h1 className={styles.title}>Hello from battle</h1>
       </header>
-      {connected ? (
+      {connected && (
         <>
           <OpponentsListView
             username={username}
@@ -141,19 +142,15 @@ export default function BattleView({ username, token }) {
             chatMessagePayload={chatMessagePayload}
             sendMessage={sendMessage}
           />
-          {alertWindowMessage && isAlertWindowVisible ? (
+          {alertWindowMessage && isAlertWindowVisible && (
             <AlertWindow
               alertWindowMessage={alertWindowMessage}
               handleOk={handleOk}
               handleNo={handleNo}
               handleCancel={handleCancel}
             />
-          ) : (
-            ""
           )}
         </>
-      ) : (
-        ""
       )}
       <footer className={styles.footer}>
         <button
