@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import styles from "../style/BattleViewStyle.module.css";
 import * as SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
@@ -8,15 +8,18 @@ import Chat from "./Chat";
 import AlertWindow from "./AlertWindow";
 
 import config from "../config";
+import StompContext from "../contexts/StompContext";
+import ChangeViewContext from "../contexts/ChangeViewContext";
 
 export default function BattleView({ username, token }) {
   const [connected, setConnected] = useState(false);
   const [buttonDisabled, setButtonDisabled] = useState(false);
-  const [stompClient, setStompClient] = useState();
   const [chatMessagePayload, setChatMessagePayload] = useState([]);
   const [userList, setUserList] = useState();
   const [alertWindowMessage, setAlertWindowMessage] = useState();
   const [isAlertWindowVisible, setIsAlertWindowVisible] = useState(false);
+  const { stompClient, setStompClient } = useContext(StompContext);
+  const changeView = useContext(ChangeViewContext);
 
   useEffect(() => {
     if (chatMessagePayload.at(-1)?.type !== "message") {
@@ -24,11 +27,34 @@ export default function BattleView({ username, token }) {
     }
   }, [chatMessagePayload]);
 
+  useEffect(() => {
+    if (alertWindowMessage?.type === "positiveBattleRequest") {
+      changeView(`/battle/${alertWindowMessage.content}`);
+    }
+  }, [alertWindowMessage]);
+
   const setConnection = () => {
     const client = new Client({});
 
     client.webSocketFactory = () => {
       return new SockJS(`${config.SERVER_NAME}/webSocketApp?token=${token}`);
+    };
+
+    client.reconnectDelay = 500;
+    client.heartbeatIncoming = 0;
+    client.heartbeatOutgoing = 4000;
+
+    client.onStompError = function (frame) {
+      console.log("Broker reported error: " + frame.headers["message"]);
+      console.log("Additional details: " + frame.body);
+      setConnected(false);
+      client.deactivate();
+      setChatMessagePayload([]);
+      setAlertWindowMessage(undefined);
+    };
+
+    client.onWebSocketClose = function (frame) {
+      setConnected(false);
     };
 
     client.onConnect = function (frame) {
@@ -44,15 +70,6 @@ export default function BattleView({ username, token }) {
       });
       setConnected(true);
       setButtonDisabled(false);
-    };
-
-    client.onStompError = function (frame) {
-      console.log("Broker reported error: " + frame.headers["message"]);
-      console.log("Additional details: " + frame.body);
-    };
-
-    client.onWebSocketClose = function (frame) {
-      setConnected(false);
     };
 
     client.activate();
