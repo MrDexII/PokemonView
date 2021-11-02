@@ -7,6 +7,7 @@ import ChangeViewContext from "../contexts/ChangeViewContext";
 
 import config from "../config";
 import Loading from "./Loading";
+import ChoosePokemon from "./ChoosePokemon";
 
 export default function Lobby({ username }) {
   const { id } = useParams();
@@ -34,7 +35,9 @@ export default function Lobby({ username }) {
           );
         } else setIsSessionExists(false);
       };
-      stompClient.subscribe(`/topic/lobby.${id}`, onMessageReceived);
+      if (!mySession || !opponentSession) {
+        stompClient.subscribe(`/topic/lobby.${id}`, onMessageReceived);
+      }
       const url = `${config.SERVER_NAME}/gameSession/${id}`;
       checkIfSessionExists(url);
     }
@@ -44,7 +47,7 @@ export default function Lobby({ username }) {
     if (session.username === username) {
       setMySession(session);
     } else {
-      setOpponentSession(session);
+      setOpponentSession({ ...session, pokemonList: [] });
     }
   };
 
@@ -101,6 +104,12 @@ export default function Lobby({ username }) {
       ) : (
         <Loading></Loading>
       )}
+      <ChoosePokemon
+        session={mySession}
+        lobbyId={id}
+        stompClient={stompClient}
+        isReady={mySession?.ready}
+      />
     </div>
   );
 }
