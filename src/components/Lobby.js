@@ -98,6 +98,7 @@ export default function Lobby({ username }) {
               styles.square
             }`}
           ></div>
+          <h1>Reroll count: {mySession?.reRollCount}</h1>
         </>
       ) : isSessionExists === false ? (
         <h1>Wrong session id: {id}</h1>

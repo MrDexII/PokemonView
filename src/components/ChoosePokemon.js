@@ -27,11 +27,12 @@ export default function ChoosePokemon({
 
   const handleClick = (event, number) => {
     event.preventDefault();
+    if (session.reRollCount <= 0) return;
     const message = {
       sessionId: session.sessionId,
       pokemonNumberToChange: number,
     };
-    const destination = `/app/lobby.update.${lobbyId}`;
+    const destination = `/app/lobby.changePokemon.${lobbyId}`;
     stompClient.publish({
       destination: destination,
       headers: {},
