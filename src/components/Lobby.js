@@ -8,6 +8,7 @@ import ChangeViewContext from "../contexts/ChangeViewContext";
 import config from "../config";
 import Loading from "./Loading";
 import ChoosePokemon from "./ChoosePokemon";
+import PokemonElement from "./PokemonElement";
 
 export default function Lobby({ username }) {
   const { id } = useParams();
@@ -76,30 +77,47 @@ export default function Lobby({ username }) {
 
   return (
     <div className={styles.container}>
+      <h1 className={styles.title}>Lobby</h1>
       {isSessionExists === true ? (
-        <>
-          <h1 className={styles.title}>Lobby</h1>
-          <h2>Me</h2>
-          <div
-            className={`${mySession?.ready ? styles.green : styles.red} ${
-              styles.square
-            } ${styles.container}`}
-          >
-            <button
-              onClick={handleReadClick}
-              disabled={mySession?.ready ? true : false}
+        mySession?.ready && opponentSession?.ready ? (
+          <>
+            <h1>Chose pokemon</h1>
+            <div className={`${styles.container} ${styles.flexRow}`}>
+              <PokemonElement />
+              <PokemonElement />
+              <PokemonElement />
+            </div>
+            <div className={styles.board}>
+              <div className={`${styles.container} ${styles.flexRow}`}>
+                <PokemonElement {...mySession?.chosenPokemon} />
+                <PokemonElement  {...opponentSession?.chosenPokemon} />
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <h2>Me</h2>
+            <div
+              className={`${mySession?.ready ? styles.green : styles.red} ${
+                styles.square
+              } ${styles.container}`}
             >
-              {mySession?.ready ? "Wait..." : "Ready"}
-            </button>
-          </div>
-          <h2>Opponent {opponentSession?.username}</h2>
-          <div
-            className={`${opponentSession?.ready ? styles.green : styles.red} ${
-              styles.square
-            }`}
-          ></div>
-          <h1>Reroll count: {mySession?.reRollCount}</h1>
-        </>
+              <button
+                onClick={handleReadClick}
+                disabled={mySession?.ready ? true : false}
+              >
+                {mySession?.ready ? "Wait..." : "Ready"}
+              </button>
+            </div>
+            <h2>Opponent {opponentSession?.username}</h2>
+            <div
+              className={`${
+                opponentSession?.ready ? styles.green : styles.red
+              } ${styles.square}`}
+            ></div>
+            <h1>Reroll count: {mySession?.reRollCount}</h1>
+          </>
+        )
       ) : isSessionExists === false ? (
         <h1>Wrong session id: {id}</h1>
       ) : (
@@ -110,6 +128,8 @@ export default function Lobby({ username }) {
         lobbyId={id}
         stompClient={stompClient}
         isReady={mySession?.ready}
+        isOpponentReady={opponentSession?.ready}
+        setMySession={setMySession}
       />
     </div>
   );

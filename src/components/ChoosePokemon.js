@@ -9,30 +9,45 @@ export default function ChoosePokemon({
   lobbyId,
   stompClient,
   isReady,
+  isOpponentReady,
+  setMySession,
 }) {
-  useEffect(() => {
-    const checkCount = async (url) => {
-      const result = await fetch(url, {
-        method: "GET",
-        headers: {
-          Authorization: localStorage.getItem("token"),
-          "Content-Type": "application/json",
-        },
-      });
-      const json = await result.json();
-    };
-    const url = `${config.SERVER_NAME}/pokemon/findByPokemonNumber?number=1`;
-    checkCount(url);
-  }, []);
+  // useEffect(() => {
+  //   const checkCount = async (url) => {
+  //     const result = await fetch(url, {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: localStorage.getItem("token"),
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     const json = await result.json();
+  //   };
+  //   const url = `${config.SERVER_NAME}/pokemon/findByPokemonNumber?number=1`;
+  //   checkCount(url);
+  // }, []);
 
   const handleClick = (event, number) => {
     event.preventDefault();
-    if (session.reRollCount <= 0) return;
+    let destination;
     const message = {
-      sessionId: session.sessionId,
-      pokemonNumberToChange: number,
+      userSessionId: session.sessionId,
+      pokemonNumber: number,
     };
-    const destination = `/app/lobby.changePokemon.${lobbyId}`;
+    if (session.reRollCount <= 0 && !(isReady && isOpponentReady)) return;
+    if (isReady && isOpponentReady) {
+      destination = `/app/lobby.duel.${lobbyId}`;
+      setMySession((prev) => {
+        return {
+          ...prev,
+          chosenPokemon: session.pokemonList.find(
+            (pokemon) => pokemon.number === number
+          ),
+        };
+      });
+    } else {
+      destination = `/app/lobby.changePokemon.${lobbyId}`;
+    }
     stompClient.publish({
       destination: destination,
       headers: {},
@@ -45,7 +60,7 @@ export default function ChoosePokemon({
       {session?.pokemonList.map((pokemon) => (
         <a
           style={
-            isReady
+            isReady && !(isReady && isOpponentReady)
               ? { pointerEvents: "none", cursor: "default" }
               : { pointerEvents: "auto", cursor: "pointer" }
           }

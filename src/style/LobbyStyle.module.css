@@ -15,9 +15,22 @@
   background-color: red;
 }
 
-.container{
+.container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
+}
+
+.flexRow {
+  flex-direction: row;
+}
+
+
+.board {
+  width: 50%;
+  height: 20rem;
+  background-color: hsl(100, 100%, 50%);
+
 }
