@@ -90,7 +90,7 @@ export default function Lobby({ username }) {
             <div className={styles.board}>
               <div className={`${styles.container} ${styles.flexRow}`}>
                 <PokemonElement {...mySession?.chosenPokemon} />
-                <PokemonElement  {...opponentSession?.chosenPokemon} />
+                <PokemonElement {...opponentSession?.chosenPokemon} />
               </div>
             </div>
           </>
@@ -123,6 +123,7 @@ export default function Lobby({ username }) {
       ) : (
         <Loading></Loading>
       )}
+      <h1>{mySession?.message}</h1>
       <ChoosePokemon
         session={mySession}
         lobbyId={id}
