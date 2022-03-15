@@ -21,6 +21,7 @@ function AddPokemon({
   };
   const defaultPokemon = {
     name: "",
+    number: 0,
     fotoUrl: "",
     types: [],
     pokemonStats: defaultPokemonStat,
@@ -45,6 +46,7 @@ function AddPokemon({
         name: initialValues.name,
         fotoUrl: initialValues.fotoUrl,
         types: initialValues.types,
+        number: initialValues.number
       };
       setPokemonStats(initialValues.pokemonStats);
       setPokemon(newPokemon);

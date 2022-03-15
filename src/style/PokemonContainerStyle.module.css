@@ -1,12 +1,19 @@
-.pokemonContainer{
-    display: flex;
-    margin: 5% 10% 1% 10% ;
-    flex-direction: row;
-    flex-wrap: wrap;
-    text-align: center;
-    justify-content: center;
-    background-color: white;
-    width: 80vmin;
+.pokemonContainer {
+  display: flex;
+  margin: 0 10%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
+  background-color: white;
+  width: 80vmin;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .main{

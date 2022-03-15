@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "../style/PokemonElementStyle.module.css";
 
-function PokemonElement({ name, fotoUrl, types }) {
+function PokemonElement({ name, fotoUrl, types, number }) {
   return (
     <div className={styles.pokemonElement}>
       {name ? (
@@ -33,6 +33,15 @@ function PokemonElement({ name, fotoUrl, types }) {
           </div>
         </>
       )}
+      {
+        number ? (
+          <h2>{number}</h2>
+        ):(
+          <div className={styles.type}>
+            <div className={`${styles.skeleton} ${styles.skeletonText}`}></div>
+          </div>
+        )
+      }
     </div>
   );
 }
