@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Route, useHistory } from "react-router-dom";
 
-import { useForm } from "./useForm";
+import { useForm } from "../customHooks/useForm";
 
 import PokemonView from "./PokemonView";
 import LoginView from "./LoginView";
@@ -10,26 +10,39 @@ import Pokemon from "./Pokemon";
 import CreateUser from "./CreateUser";
 import NoAllow from "./NoAllow";
 import AdminPanel from "./AdminPanel";
+import BattleView from "./BattleView";
+import Lobby from "./Lobby";
+
+import config from "../config";
+import StompContext from "../contexts/StompContext";
+import ChangeViewContext from "../contexts/ChangeViewContext";
+
 import "../style/index.css";
 
-function App() {
+export default function App() {
   const defaultUserDetails = {
-    username: "",
+    username:
+      localStorage.getItem("userName") === null
+        ? ""
+        : localStorage.getItem("userName"),
     password: "",
-    //token: null,
-    token:
-      "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbeyJyb2xlX2lkIjoxLCJyb2xlIjoiQURNSU4iLCJhdXRob3JpdHkiOiJBRE1JTiJ9LHsicm9sZV9pZCI6Miwicm9sZSI6IlVTRVIiLCJhdXRob3JpdHkiOiJVU0VSIn1dLCJpYXQiOjE2Mjk3MTc4OTMsImV4cCI6MTYzMDg3OTIwMH0.Egts-pVdgM2qoVwkxNbRRJJ5zEEM1dlEkbmQ2QRvt2E6GeUHilSZ9iKShBFdU06hGHrEEOxyz2pcCxU1avQiSQ",
+    token: localStorage.getItem("token"),
     status: 0,
   };
 
   const [values, setValues] = useForm(defaultUserDetails);
   const [isLoading, setIsLoading] = useState(false);
+  const [stompClient, setStompClient] = useState();
+  const stompContextValue = { stompClient, setStompClient };
 
   let history = useHistory();
 
-  // useEffect(() => {
-  //   setIsLoading(false);
-  // }, [setIsLoading]);
+  useEffect(() => {
+    if (values.token) {
+      localStorage.setItem("token", String(values.token));
+      localStorage.setItem("userName", String(values.username));
+    }
+  }, [values]);
 
   const loginSubmit = (event) => {
     event.preventDefault();
@@ -60,7 +73,7 @@ function App() {
       setIsLoading(false);
     }
 
-    const url = "http://192.168.1.4:8080/login";
+    const url = `${config.SERVER_NAME}/login`;
 
     setIsLoading(true);
     fetchUser(url);
@@ -90,13 +103,13 @@ function App() {
       }).catch((error) => console.error(error));
     }
 
-    const url = "http://192.168.1.4:8080/pokemon/";
+    const url = `${config.SERVER_NAME}/pokemon/`;
     addPokemon(url);
     changeView("/pokemon");
   };
 
   const logout = () => {
-    setValues(defaultUserDetails);
+    localStorage.clear();
     changeView("/");
   };
   const changeView = (path) => history.push(path);
@@ -107,56 +120,64 @@ function App() {
     return false;
   };
   return (
-    <Switch>
-      <Route path="/" exact>
-        <LoginView
-          {...values}
-          isLoading={isLoading}
-          changeView={changeView}
-          handleChange={setValues}
-          handleSubmit={loginSubmit}
-        />
-      </Route>
-      <Route path="/pokemon" exact>
-        <PokemonView
-          username={values.username}
-          token={values.token}
-          isUserHaveAdminAuthority={isUserHaveAdminAuthority}
-          changeView={changeView}
-          logout={logout}
-        />
-      </Route>
-      <Route path="/pokemon/add" exact>
-        {isUserHaveAdminAuthority() ? (
-          <AddPokemon
-            authorities={values.authorities}
-            isUserHaveAdminAuthority={isUserHaveAdminAuthority}
-            handleSubmit={addPokemonSubmit}
-            token={values.token}
-          />
-        ) : (
-          <NoAllow />
-        )}
-      </Route>
-      <Route path="/pokemon/:id">
-        <Pokemon
-          token={values.token}
-          isUserHaveAdminAuthority={isUserHaveAdminAuthority}
-          changeView={changeView}
-        />
-      </Route>
-      <Route path="/createUser" exact>
-        <CreateUser />
-      </Route>
-      <Route path="/admin" exact>
-        {isUserHaveAdminAuthority() ? (
-          <AdminPanel username={values.username} token={values.token} />
-        ) : (
-          <NoAllow />
-        )}
-      </Route>
-    </Switch>
+    <StompContext.Provider value={stompContextValue}>
+      <ChangeViewContext.Provider value={changeView}>
+        <Switch>
+          <Route path="/" exact>
+            <LoginView
+              {...values}
+              isLoading={isLoading}
+              changeView={changeView}
+              handleChange={setValues}
+              handleSubmit={loginSubmit}
+            />
+          </Route>
+          <Route path="/pokemon" exact>
+            <PokemonView
+              username={values.username}
+              token={values.token}
+              isUserHaveAdminAuthority={isUserHaveAdminAuthority}
+              changeView={changeView}
+              logout={logout}
+            />
+          </Route>
+          <Route path="/pokemon/add" exact>
+            {isUserHaveAdminAuthority() ? (
+              <AddPokemon
+                authorities={values.authorities}
+                isUserHaveAdminAuthority={isUserHaveAdminAuthority}
+                handleSubmit={addPokemonSubmit}
+                token={values.token}
+              />
+            ) : (
+              <NoAllow />
+            )}
+          </Route>
+          <Route path="/pokemon/:id">
+            <Pokemon
+              token={values.token}
+              isUserHaveAdminAuthority={isUserHaveAdminAuthority}
+              changeView={changeView}
+            />
+          </Route>
+          <Route path="/createUser" exact>
+            <CreateUser />
+          </Route>
+          <Route path="/admin" exact>
+            {isUserHaveAdminAuthority() ? (
+              <AdminPanel username={values.username} token={values.token} />
+            ) : (
+              <NoAllow />
+            )}
+          </Route>
+          <Route path="/battle" exact>
+            <BattleView token={values.token} username={values.username} />
+          </Route>
+          <Route path="/battle/:id" exact>
+            <Lobby username={values.username} />
+          </Route>
+        </Switch>
+      </ChangeViewContext.Provider>
+    </StompContext.Provider>
   );
 }
-
-export default App;

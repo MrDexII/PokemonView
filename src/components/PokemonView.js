@@ -4,6 +4,8 @@ import { withRouter, Link } from "react-router-dom";
 import styles from "../style/PokemonContainerStyle.module.css";
 import PokemonElement from "./PokemonElement";
 
+import config from "../config";
+
 function PokemonView({
   isUserHaveAdminAuthority,
   token,
@@ -31,7 +33,7 @@ function PokemonView({
   }
 
   useEffect(() => {
-    const url = "http://192.168.1.4:8080/pokemon/";
+    const url = `${config.SERVER_NAME}/pokemon/`;
     fetchData(url);
   }, []);
 
@@ -92,20 +94,38 @@ function PokemonView({
 
   return (
     <div className={styles.main}>
-      <h1>Current User: {username}</h1>
+      <div className={styles.nav}>
+        <h1 className={styles.navElement}>Current User: {username}</h1>
+        <button
+          className={styles.navElement}
+          onClick={() => changeView("/battle")}
+        >
+          Pokemon Battle
+        </button>
+        {isUserHaveAdminAuthority() ? (
+          <>
+            <button
+              className={styles.navElement}
+              onClick={() => changeView("/pokemon/add")}
+            >
+              Add new Pokemon
+            </button>
+            <button
+              className={styles.navElement}
+              onClick={() => changeView("/admin")}
+            >
+              Admin Panel
+            </button>
+          </>
+        ) : (
+          ""
+        )}
+        <button className={styles.navElement} onClick={logout}>
+          LOGOUT
+        </button>
+      </div>
       <PokemonContainer />
       <Navigation />
-      {isUserHaveAdminAuthority() ? (
-        <>
-          <button onClick={() => changeView("/pokemon/add")}>
-            Add new Pokemon
-          </button>
-          <button onClick={() => changeView("/admin")}>Admin Panel</button>
-        </>
-      ) : (
-        ""
-      )}
-      <button onClick={logout}>LOGOUT</button>
     </div>
   );
 }

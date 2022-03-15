@@ -22,7 +22,8 @@ img {
 
 .skeleton {
   opacity: 0.7;
-  animation: skeleton-loading 1s linear infinite alternate;
+  background-color: hsl(200, 20%, 70%);
+  /* animation: skeleton-loading 1s linear infinite alternate; */
 }
 
 .skeletonText {

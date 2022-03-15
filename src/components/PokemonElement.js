@@ -12,7 +12,7 @@ function PokemonElement({ name, fotoUrl, types, number }) {
       {fotoUrl ? (
         <img src={fotoUrl} alt="" />
       ) : (
-        <img className={styles.skeleton} />
+        <img className={styles.skeleton} alt=""/>
       )}
       {types ? (
         <>
