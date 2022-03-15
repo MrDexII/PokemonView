@@ -5,12 +5,14 @@ import PokemonElement from "./PokemonElement";
 import styles from "../style/PokemonStyle.module.css";
 import AddPokemon from "./AddPokemon";
 
+import config from "../config";
+
 function Pokemon({ isUserHaveAdminAuthority, token, changeView }) {
   const { id } = useParams();
   const [pokemonData, setPokemonData] = useState(null);
 
   useEffect(() => {
-    const url = `http://192.168.1.4:8080/pokemon/${id}`;
+    const url = `${config.SERVER_NAME}/pokemon/${id}`;
     fetchOnePokemon(url);
   }, []);
 

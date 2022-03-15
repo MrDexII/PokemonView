@@ -1,0 +1,20 @@
+.list {
+  list-style-type: none;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.list li {
+  border: 2px solid black;
+  margin: 20px auto;
+  width: 50%;
+  height: 10vh;
+}
+
+.list li a {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
