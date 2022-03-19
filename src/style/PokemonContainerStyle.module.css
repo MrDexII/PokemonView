@@ -1,12 +1,8 @@
-.pokemonContainer {
+.content {
   display: flex;
-  margin: 0 10%;
-  flex-direction: row;
-  flex-wrap: wrap;
-  text-align: center;
+  flex-direction: column-reverse;
   justify-content: center;
-  background-color: white;
-  width: 80vmin;
+  align-items: center;
 }
 
 .main {
@@ -20,7 +16,6 @@
   display: flex;
   justify-content: space-around;
   width: 80vmin;
-  margin: 10px 10% 10px 10%;
 }
 
 .nav {
@@ -36,8 +31,79 @@
   margin: 5px;
 }
 
+.pokemonContainer {
+  display: flex;
+  margin: 0 0;
+  flex-direction: row;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
+  background-color: white;
+  width: 80vmin;
+}
+
+.left {
+  width: 0;
+  height: 0;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 10%;
+  width: 80vmin;
+}
+
+.inputSearch {
+  width: 80vmin;
+}
+
+.searchList {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: white;
+  border: solid black 1px;
+  border-top: 0;
+  width: 80vmin;
+}
+
+.searchList a {
+  width: 100%;
+}
+
 @media (min-width: 500px) {
   .nav {
     flex-direction: row;
+  }
+}
+
+@media only screen and (min-width: 1100px) and (orientation: landscape) {
+  .content {
+    flex-direction: row;
+  }
+
+  .left,
+  .right {
+    width: 33%;
+    height: 100vh;
+  }
+  .searchLabel,
+  .searchList,
+  .inputSearch {
+    width: 80%;
+  }
+
+  .right {
+    justify-content: flex-start;
+  }
+  .searchLabel {
+    margin-top: 50px;
   }
 }

@@ -15,6 +15,8 @@ function PokemonView({
 }) {
   const [state, setState] = useState({ content: null, isLoading: true });
 
+  const [pokemonSearch, setPokemonSearch] = useState([]);
+
   async function fetchData(url) {
     setState((prev) => {
       return {
@@ -49,17 +51,20 @@ function PokemonView({
     return (
       <div className={styles.pokemonContainer}>
         {state.isLoading !== true
-          ? state.content._embedded.pokemonList.map((pokemon) => {
-              return (
-                <Link key={pokemon.number} to={"/pokemon/" + pokemon._id}>
-                  <PokemonElement {...pokemon} />
-                </Link>
-              );
-            })
+          ? state.content._embedded.pokemonList.map(mapPokemonListToLink)
           : populateDummyElements()}
       </div>
     );
   };
+
+  const mapPokemonListToLink = (pokemon) => {
+    return (
+      <Link key={pokemon.number} to={"/pokemon/" + pokemon._id}>
+        <PokemonElement {...pokemon} />
+      </Link>
+    );
+  };
+
   const nextPage = () => {
     const urlNext = state.content._links.next.href;
     fetchData(urlNext);
@@ -92,40 +97,82 @@ function PokemonView({
     );
   };
 
+  const handleSearch = ({ target }) => {
+    setPokemonSearch([]);
+    if (target.value.length < 3) return;
+    const url = `${config.SERVER_NAME}/elastic/${target.value}?page=0&size=3`;
+    searchPokemonElastic(url);
+  };
+
+  const searchPokemonElastic = async (url) => {
+    const response = await fetch(url, {
+      method: "GET",
+      "Content-Type": "application/json",
+      headers: {
+        Authorization: token,
+      },
+    });
+    if (response.status !== 200) return;
+    const json = await response.json();
+    json._embedded.pokemonList
+      ? setPokemonSearch(json._embedded.pokemonList)
+      : setPokemonSearch([]);
+  };
+
   return (
-    <div className={styles.main}>
-      <div className={styles.nav}>
-        <h1 className={styles.navElement}>Current User: {username}</h1>
-        <button
-          className={styles.navElement}
-          onClick={() => changeView("/battle")}
-        >
-          Pokemon Battle
-        </button>
-        {isUserHaveAdminAuthority() ? (
-          <>
-            <button
-              className={styles.navElement}
-              onClick={() => changeView("/pokemon/add")}
-            >
-              Add new Pokemon
-            </button>
-            <button
-              className={styles.navElement}
-              onClick={() => changeView("/admin")}
-            >
-              Admin Panel
-            </button>
-          </>
-        ) : (
-          ""
-        )}
-        <button className={styles.navElement} onClick={logout}>
-          LOGOUT
-        </button>
+    <div className={styles.content}>
+      <div className={styles.left}></div>
+      <div className={styles.main}>
+        <div className={styles.nav}>
+          <h1 className={styles.navElement}>Current User: {username}</h1>
+          <button
+            className={styles.navElement}
+            onClick={() => changeView("/battle")}
+          >
+            Pokemon Battle
+          </button>
+          {isUserHaveAdminAuthority() ? (
+            <>
+              <button
+                className={styles.navElement}
+                onClick={() => changeView("/pokemon/add")}
+              >
+                Add new Pokemon
+              </button>
+              <button
+                className={styles.navElement}
+                onClick={() => changeView("/admin")}
+              >
+                Admin Panel
+              </button>
+            </>
+          ) : (
+            ""
+          )}
+          <button className={styles.navElement} onClick={logout}>
+            LOGOUT
+          </button>
+        </div>
+        <PokemonContainer />
+        <Navigation />
       </div>
-      <PokemonContainer />
-      <Navigation />
+      <div className={styles.right}>
+        <label htmlFor="elasticSearch" className={styles.searchLabel}>
+          Search for Pokemon:
+        </label>
+        <input
+          type="search"
+          name="elasticSearch"
+          className={styles.inputSearch}
+          onChange={handleSearch}
+          autoComplete="off"
+        />
+        <div
+          className={`${pokemonSearch.length !== 0 ? styles.searchList : ""}`}
+        >
+          {pokemonSearch.map(mapPokemonListToLink)}
+        </div>
+      </div>
     </div>
   );
 }
