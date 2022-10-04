@@ -17,7 +17,7 @@ function PokemonView({
 
   const [pokemonSearch, setPokemonSearch] = useState([]);
 
-  async function fetchData(url) {
+  const fetchData = async (url) => {
     setState((prev) => {
       return {
         ...prev,
@@ -28,11 +28,12 @@ function PokemonView({
       method: "GET",
       headers: {
         Authorization: token,
+        "Content-Type": "application/json",
       },
     });
     const json = await response.json();
     setState({ content: json, isLoading: false });
-  }
+  };
 
   useEffect(() => {
     const url = `${config.SERVER_NAME}/pokemon/`;
