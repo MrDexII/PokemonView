@@ -36,7 +36,7 @@ function PokemonView({
   };
 
   useEffect(() => {
-    const url = `${config.SERVER_NAME}/pokemon/`;
+    const url = `${config.SERVER_NAME}/pokemon/page?page=0&size=16`;
     fetchData(url);
   }, []);
 
