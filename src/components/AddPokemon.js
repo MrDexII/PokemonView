@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "./useForm";
+import { useForm } from "../customHooks/useForm";
 import Select from "react-select";
+import config from "../config";
 
 import styles from "../style/AddPokemonView.module.css";
 import styleButton from "../style/PokemonStyle.module.css";
@@ -21,6 +22,7 @@ function AddPokemon({
   };
   const defaultPokemon = {
     name: "",
+    number: 0,
     fotoUrl: "",
     types: [],
     pokemonStats: defaultPokemonStat,
@@ -33,18 +35,19 @@ function AddPokemon({
   useEffect(() => {
     setPokemon({
       ...pokemon,
-      ["pokemonStats"]: pokemonStats,
+      pokemonStats: pokemonStats,
     });
   }, [pokemonStats]);
 
   useEffect(() => {
-    const url = "http://192.168.1.4:8080/pokemon/type/";
+    const url = `${config.SERVER_NAME}/pokemon/type/`;
     fetchPokemonType(url);
     if (initialValues) {
       const newPokemon = {
         name: initialValues.name,
         fotoUrl: initialValues.fotoUrl,
         types: initialValues.types,
+        number: initialValues.number
       };
       setPokemonStats(initialValues.pokemonStats);
       setPokemon(newPokemon);

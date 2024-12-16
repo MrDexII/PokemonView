@@ -1,0 +1,19 @@
+.title {
+  color: chartreuse;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.okButton {
+}
+
+.cancelButton {
+}
+
+.buttonsContainer {
+}

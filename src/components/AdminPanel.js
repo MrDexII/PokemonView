@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import config from "../config";
 
 import styles from "../style/AdminPanelStyle.module.css";
 import { useState } from "react";
@@ -16,7 +17,7 @@ function AdminPanel({ token, username }) {
   }, []);
 
   async function getAllUsers() {
-    const url = "http://192.168.1.4:8080/user/";
+    const url = `${config.SERVER_NAME}/user/`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -29,7 +30,7 @@ function AdminPanel({ token, username }) {
   }
 
   async function getAllRoles() {
-    const url = "http://192.168.1.4:8080/user/role/";
+    const url = "/user/role/";
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -81,7 +82,7 @@ function AdminPanel({ token, username }) {
   };
 
   const handleUpdateUser = async (id) => {
-    const url = `http://192.168.1.4:8080/user/${id}`;
+    const url = `${config.SERVER_NAME}/user/${id}`;
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -94,7 +95,7 @@ function AdminPanel({ token, username }) {
   };
 
   const handleDeleteUser = async (id) => {
-    const url = `http://192.168.1.4:8080/user/${id}`;
+    const url = `${config.SERVER_NAME}/user/${id}`;
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
